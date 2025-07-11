@@ -2,13 +2,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/* Style untuk animasi scroll yang akan kita pakai nanti */
-.before-enter {
-opacity: 0;
-transform: translateY(100px);
-transition: all 1s ease-out;
+
+/* Animasi Global */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(2deg); }
 }
-.enter {
-opacity: 1;
-transform: translateY(0px);
+
+@keyframes text-shine {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
 }
+
