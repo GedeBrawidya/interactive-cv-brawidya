@@ -2,7 +2,7 @@ const educationHistory = [
   {
     id: 1,
     period: '2022 - Sekarang',
-    institution: 'Universitas Gadjah Mada',
+    institution: 'Universitas Amikom Yogyakarta',
     major: 'S1 - Teknik Informatika',
     description: 'Fokus pada pengembangan perangkat lunak dan sistem informasi',
     gpa: '3.8',
