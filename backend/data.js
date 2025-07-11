@@ -1,17 +1,17 @@
 const educationHistory = [
   {
     id: 1,
-    period: '2022 - Sekarang',
+    period: '2023 - Sekarang',
     institution: 'Universitas Amikom Yogyakarta',
-    major: 'S1 - Teknik Informatika',
+    major: 'S1 - Informatika',
     description: 'Fokus pada pengembangan perangkat lunak dan sistem informasi',
-    gpa: '3.8',
-    logo: '/images/ugm-logo.png'
+    gpa: '4.0',
+    logo: '/images/logo_amikom.png'
   },
   {
     id: 2,
     period: '2019 - 2022',
-    institution: 'SMA Negeri 1 Teladan Yogyakarta',
+    institution: 'SMA Negeri 1 Singaraja',
     major: 'MIPA',
     description: 'Penjurusan Matematika dan Ilmu Pengetahuan Alam',
     gpa: '92.5',
@@ -76,7 +76,7 @@ const skills = [
     id: 1,
     name: 'Vue.js', 
     level: 'Mahir', 
-    icon: '/images/vue-icon.png', 
+    icon: '/images/vue.png', 
     color: 'bg-green-100 text-green-800',
     description: 'Framework JavaScript untuk membangun antarmuka pengguna',
     category: 'Frontend',

@@ -78,7 +78,7 @@ onMounted(async () => {
               <div class="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10"></div>
             </div>
           </div>
-          
+
           <!-- Skill icon with gradient background -->
           <div class="relative z-10 w-16 h-16 mb-4 rounded-full flex items-center justify-center overflow-hidden">
             <div class="absolute inset-0 rounded-full bg-gradient-to-br opacity-70" :class="skill.color"></div>
@@ -93,7 +93,7 @@ onMounted(async () => {
           <!-- Skill name and level -->
           <h3 class="text-lg font-semibold text-white text-center relative z-10 group-hover:text-cyan-300 transition-colors">{{ skill.name }}</h3>
           <div class="mt-2 text-sm text-gray-300 relative z-10">{{ skill.level }}</div>
-          
+
           <!-- Subtle animated dots -->
           <div class="absolute top-3 right-3 flex space-x-1">
             <div class="w-1.5 h-1.5 rounded-full bg-cyan-500/30 group-hover:bg-cyan-400/70 transition-colors duration-300"></div>
