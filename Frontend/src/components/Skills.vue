@@ -11,7 +11,7 @@ import ExpressIcon from '@/assets/expressjs.png'
 import PostgresIcon from '@/assets/postgresql.png'
 import GithubIcon from '@/assets/github.jpeg'
 import HtmlCssIcon from '@/assets/html-css.png'
-import FotoKampus from '@/assets/foto-kampus.jpg'
+
 
 const skills = ref([])
 
@@ -22,7 +22,7 @@ const staticSkills = [
   { name: 'Node.js', level: 'Menengah', icon: NodeIcon, color: 'from-green-500 to-emerald-400' },
   { name: 'Express.js', level: 'Menengah', icon: ExpressIcon, color: 'from-gray-500 to-gray-400' },
   { name: 'PostgreSQL', level: 'Menengah', icon: PostgresIcon, color: 'from-indigo-500 to-violet-400' },
-  { name: 'Git & GitHub', level: 'Mahir', icon: GithubIcon, color: 'from-gray-600 to-gray-500' },
+  { name: 'Git', level: 'Mahir', icon: GithubIcon, color: 'from-gray-600 to-gray-500' },
   { name: 'HTML5 & CSS3', level: 'Mahir', icon: HtmlCssIcon, color: 'from-orange-500 to-amber-400' }
 ]
 
@@ -30,14 +30,17 @@ onMounted(async () => {
   try {
     const response = await axios.get('https://interactive-cv-brawidya-production.up.railway.app/api/skills')
     if (response.data.data.length === 0) throw new Error('Empty response')
-    skills.value = response.data.data.map(item => {
-      const matched = staticSkills.find(s => s.name === item.name)
-      return {
-        ...item,
-        icon: FotoKampus,
-        color: matched?.color || 'from-gray-500 to-gray-400'
-      }
-    })
+   skills.value = response.data.data.map(item => {
+  const matched = staticSkills.find(s => s.name === item.name)
+  return {
+    ...item,
+    icon: matched?.icon || '/images/default-icon.png',
+    color: matched?.color || 'from-gray-500 to-gray-400',
+    level: matched?.level || item.level || 'Tidak diketahui'
+  }
+})
+
+
   } catch (error) {
     console.error('Gagal fetch, menggunakan data statis:', error)
     skills.value = staticSkills
