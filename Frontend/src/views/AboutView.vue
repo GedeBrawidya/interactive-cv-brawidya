@@ -1,15 +1,44 @@
 <template>
-  <!-- Konten HTML Anda di sini -->
   <div>
-    <h1>Tentang Saya</h1>
-    <!-- Isi konten tentang -->
+    <h1>Portfolio Data</h1>
+    
+    <section v-if="education.data">
+      <h2>Education</h2>
+      <div v-for="edu in education.data" :key="edu.id">
+        <h3>{{ edu.institution }}</h3>
+        <p>{{ edu.major }}</p>
+      </div>
+    </section>
+
+    <!-- Tambahkan section lain untuk achievements, experiences, dll -->
   </div>
 </template>
 
-<script setup>
-// Logika JavaScript di sini (gunakan Composition API)
-</script>
+<script>
+import { 
+  fetchEducation, 
+  fetchAchievements,
+  fetchExperiences,
+  fetchSkills,
+  fetchProjects
+} from '../api/api';
 
-<style scoped>
-/* CSS styling jika diperlukan */
-</style>
+export default {
+  data() {
+    return {
+      education: [],
+      achievements: [],
+      experiences: [],
+      skills: [],
+      projects: []
+    };
+  },
+  async created() {
+    this.education = await fetchEducation();
+    this.achievements = await fetchAchievements();
+    this.experiences = await fetchExperiences();
+    this.skills = await fetchSkills();
+    this.projects = await fetchProjects();
+  }
+};
+</script>

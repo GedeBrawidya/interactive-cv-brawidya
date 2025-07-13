@@ -20,7 +20,7 @@ const fallbackData = {
     institution: 'Universitas Amikom Yogyakarta',
     major: 'S1 - Informatika',
     description: 'Fokus pada pengembangan perangkat lunak dan sistem informasi',
-    additional: 'Aktif dalam organisasi mahasiswa dan kegiatan kampus',
+    additional: 'falback',
     gpa: '4.0',
     logo: '/images/logo_amikom.png'
     },
@@ -30,7 +30,7 @@ const fallbackData = {
     institution: 'SMA Negeri 1 Singaraja',
     major: 'MIPA',
     description: 'Penjurusan Matematika dan Ilmu Pengetahuan Alam',
-    additional: 'Juara 1 Lomba Cerdas Cermat Tingkat Provinsi',
+    additional: 'falback',
     gpa: '92.5',
     logo: '/images/sma1-logo.png'
   }
@@ -42,7 +42,7 @@ const fallbackData = {
     title: 'Juara 1 Hackathon Nasional',
     year: 2023,
     description: 'Memenangkan kompetisi pengembangan aplikasi dengan solusi inovatif',
-    category: 'Teknologi',
+    category: 'falback',
     organizer: 'Kementerian Pendidikan',
     link: '/certificates/hackathon-2023.pdf',
     skills: ['Vue.js', 'Teamwork', 'Problem Solving']
@@ -52,7 +52,7 @@ const fallbackData = {
     title: 'Beasiswa Prestasi',
     year: 2022,
     description: 'Mendapatkan beasiswa akademik selama 2 semester berturut-turut',
-    category: 'Akademik',
+    category: 'falback',
     organizer: 'Universitas Gadjah Mada',
     link: '/certificates/beasiswa-2022.pdf',
     skills: ['Academic Excellence']

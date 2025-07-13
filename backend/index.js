@@ -23,6 +23,11 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get("/", (req, res) => {
+  res.send("welcome to backend")
+  });
+
+
 // API Documentation
 app.get('/api', (req, res) => {
   res.json({
