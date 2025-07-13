@@ -101,12 +101,12 @@ const sortedEducation = computed(() => [...educationHistory.value].sort(sortByDa
 const sortedAchievements = computed(() => [...achievements.value].sort(sortByYearDesc))
 const sortedExperiences = computed(() => [...experiences.value].sort(sortByDateDesc))
 
-const fetchData = async () => {
+const fetchData = async (type) => {
   try {
-    const response = await axios.get(`https://interactive-cv-brawidya-production.up.railway.app/api/education`)
+    const response = await axios.get(`https://interactive-cv-brawidya-production.up.railway.app/api/${type}`)
     return response.data.data 
   } catch (err) {
-    console.error(`Error fetching:`, err)
+    console.error(`Error fetching :`, err)
   }
 }
 
@@ -116,33 +116,45 @@ const fetchProfileData = async () => {
     error.value = null
 
     const [eduData, achData, expData] = await Promise.all([
-      fetchData('education'),
-      fetchData('achievements'),
-      fetchData('experiences')
+      fetchData('education'),     // panggil API /api/education
+      fetchData('achievements'),  // panggil API /api/achievements
+      fetchData('experiences')    // panggil API /api/experiences
     ])
 
     educationHistory.value = eduData.map(edu => ({
-      ...edu,
-      showDetails: false,
-      additional: edu.additional || '',
-      gpa: edu.gpa || '',
-      logo: edu.logo || ''
+      id: edu.id,
+      period: edu.period || `${edu.start_year} - ${edu.end_year || 'Sekarang'}`,
+      institution: edu.institution || edu.school_name || '',
+      major: edu.major || '',
+      description: edu.description || '',
+      additional: edu.additional || 'belum tersedia',
+      gpa: edu.gpa ? String(edu.gpa) : '',
+      logo: edu.logo || '/images/default-edu-logo.png',
+      showDetails: false
     }))
 
     achievements.value = achData.map(ach => ({
-      ...ach,
-      category: ach.category || '',
-      link: ach.link || '',
-      skills: ach.skills || []
+         id: ach.id,
+  title: ach.title || 'Tanpa Judul',
+  year: ach.year || 'Tidak diketahui',
+  description: ach.description || '',
+  category: ach.category || 'fallback',
+  organizer: ach.organizer || '',
+  link: ach.link || '',
+  skills: Array.isArray(ach.skills) ? ach.skills : [],
     }))
 
     experiences.value = expData.map(exp => ({
-      ...exp,
-      showResponsibilities: false,
+      id: exp.id,
+      position: exp.position || '',
+      company: exp.company || '',
+      period: exp.period || '',
       location: exp.location || '',
-      responsibilities: exp.responsibilities || [],
-      skills: exp.skills || [],
-      companyLogo: exp.company_logo || ''
+      description: exp.description || '',
+      responsibilities: Array.isArray(exp.responsibilities) ? exp.responsibilities : [],
+      skills: Array.isArray(exp.skills) ? exp.skills : [],
+      companyLogo: exp.company_logo || exp.companyLogo || '/images/default-company-logo.png',
+      showResponsibilities: false
     }))
 
   } catch (err) {
