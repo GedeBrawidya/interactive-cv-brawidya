@@ -1,20 +1,34 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-import axios from 'axios';
-import SectionTitle from './SectionTitle.vue';
+import { ref, onMounted, onUnmounted } from 'vue'
+import axios from 'axios'
+import SectionTitle from './SectionTitle.vue'
 
-const projects = ref([]);
-const currentIndex = ref(0);
-const scrollInterval = ref(null);
-const scrollContainer = ref(null);
+const projects = ref([])
+const currentIndex = ref(0)
+const scrollInterval = ref(null)
+const scrollContainer = ref(null)
+const isLoading = ref(true)
+const error = ref(null)
 
-onMounted(async () => {
+const fetchProjects = async () => {
   try {
-    const response = await axios.get('http://localhost:3000/api/projects');
-    projects.value = response.data;
-    startAutoScroll();
-  } catch (error) {
-    console.error('Error mengambil data:', error);
+    const response = await axios.get('http://localhost:3000/api/projects')
+    if (response.data.success) {
+      projects.value = response.data.data.map(proj => ({
+        ...proj,
+        image: proj.image || 'https://via.placeholder.com/800x500?text=No+Image',
+        tech: proj.tech || [],
+        link: proj.link || '#',
+        category: proj.category || 'Project',
+        githubLink: proj.github_link || '',
+        features: proj.features || [],
+        screenshots: proj.screenshots || []
+      }))
+    } else {
+      throw new Error('Empty response')
+    }
+  } catch (err) {
+    console.error('Error fetching projects:', err)
     projects.value = [
       {
         title: 'Website Toko Online (Fallback)',
@@ -31,70 +45,60 @@ onMounted(async () => {
         tech: ['React', 'Firebase', 'Tailwind CSS'],
         link: '#',
         category: 'Productivity'
-      },
-      {
-        title: 'Sistem Monitoring IoT',
-        image: 'https://via.placeholder.com/800x500?text=Proyek+3',
-        description: 'Dashboard real-time untuk memantau perangkat IoT dengan notifikasi.',
-        tech: ['Node.js', 'WebSocket', 'MongoDB'],
-        link: '#',
-        category: 'IoT'
-      },
-      {
-        title: 'Aplikasi Mobile Kesehatan',
-        image: 'https://via.placeholder.com/800x500?text=Proyek+4',
-        description: 'Tracking kesehatan pribadi dengan integrasi wearable devices.',
-        tech: ['Flutter', 'Firebase', 'Dart'],
-        link: '#',
-        category: 'Health'
       }
-    ];
-    startAutoScroll();
+    ]
+    error.value = 'Failed to load projects. Showing fallback data.'
+  } finally {
+    isLoading.value = false
   }
-});
+}
+
+onMounted(async () => {
+  await fetchProjects()
+  startAutoScroll()
+})
 
 onUnmounted(() => {
-  stopAutoScroll();
-});
+  stopAutoScroll()
+})
 
 const startAutoScroll = () => {
   scrollInterval.value = setInterval(() => {
-    currentIndex.value = (currentIndex.value + 1) % projects.value.length;
-    scrollToProject(currentIndex.value);
-  }, 3000); // Geser setiap 3 detik
-};
+    currentIndex.value = (currentIndex.value + 1) % projects.value.length
+    scrollToProject(currentIndex.value)
+  }, 3000)
+}
 
 const stopAutoScroll = () => {
   if (scrollInterval.value) {
-    clearInterval(scrollInterval.value);
-    scrollInterval.value = null;
+    clearInterval(scrollInterval.value)
+    scrollInterval.value = null
   }
-};
+}
 
 const scrollToProject = (index) => {
   if (scrollContainer.value) {
-    const container = scrollContainer.value;
-    const projectWidth = container.querySelector('.project-item').offsetWidth;
-    const scrollPosition = index * (projectWidth + 32); // 32px untuk gap
+    const container = scrollContainer.value
+    const projectWidth = container.querySelector('.project-item').offsetWidth
+    const scrollPosition = index * (projectWidth + 32)
     container.scrollTo({
       left: scrollPosition,
       behavior: 'smooth'
-    });
+    })
   }
-};
+}
 
 const handleMouseEnter = () => {
-  stopAutoScroll();
-};
+  stopAutoScroll()
+}
 
 const handleMouseLeave = () => {
-  startAutoScroll();
-};
+  startAutoScroll()
+}
 </script>
 
 <template>
   <section id="proyek" class="relative py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white overflow-hidden">
-    <!-- Enhanced background elements -->
     <div class="absolute inset-0 opacity-30">
       <div class="absolute top-0 left-0 w-full h-full bg-grid-pattern"></div>
       <div class="absolute top-0 left-0 w-full h-full bg-radial-gradient"></div>
@@ -108,12 +112,19 @@ const handleMouseLeave = () => {
       </SectionTitle>
 
       <!-- Loading indicator -->
-      <div v-if="projects.length === 0" class="flex justify-center py-10">
+      <div v-if="isLoading" class="flex justify-center py-10">
         <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500"></div>
+      </div>
+
+      <!-- Error State -->
+      <div v-else-if="error" class="text-center py-12 bg-red-900/20 rounded-lg border border-red-700/50 mb-8">
+        <i class="fas fa-exclamation-triangle text-red-400 text-3xl mb-4"></i>
+        <p class="text-red-300">{{ error }}</p>
       </div>
 
       <!-- Horizontal scrolling container -->
       <div 
+        v-if="!isLoading"
         class="relative mt-12"
         @mouseenter="handleMouseEnter"
         @mouseleave="handleMouseLeave"
@@ -131,14 +142,14 @@ const handleMouseLeave = () => {
               <!-- Project image with gradient overlay -->
               <div class="relative overflow-hidden h-48">
                 <img
-                  :src="project.image || 'https://via.placeholder.com/800x500?text=No+Image'"
-                  alt="Gambar Proyek"
+                  :src="project.image"
+                  :alt="project.title"
                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent"></div>
                 <div class="absolute bottom-4 left-4">
                   <span class="inline-block px-3 py-1 text-xs font-semibold text-cyan-400 bg-gray-900/70 rounded-full">
-                    {{ project.category || 'Project' }}
+                    {{ project.category }}
                   </span>
                 </div>
               </div>
@@ -151,26 +162,39 @@ const handleMouseLeave = () => {
                 <!-- Technologies -->
                 <div class="mb-4 flex flex-wrap gap-2">
                   <span
-                    v-for="(t, techIndex) in project.tech"
+                    v-for="(tech, techIndex) in project.tech"
                     :key="techIndex"
                     class="inline-block px-2.5 py-0.5 text-xs rounded-full bg-gray-700/70 text-cyan-400"
                   >
-                    {{ t }}
+                    {{ tech }}
                   </span>
                 </div>
                 
-                <!-- View button -->
-                <a
-                  :href="project.link || '#'"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="mt-auto inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-blue-500/80 to-cyan-500/80 rounded-lg text-white font-medium hover:from-blue-500 hover:to-cyan-500 transition-all duration-300 hover:shadow-lg"
-                >
-                  Lihat Detail
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </a>
+                <!-- View buttons -->
+                <div class="flex gap-2">
+                  <a
+                    v-if="project.link"
+                    :href="project.link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mt-auto inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-blue-500/80 to-cyan-500/80 rounded-lg text-white font-medium hover:from-blue-500 hover:to-cyan-500 transition-all duration-300 hover:shadow-lg flex-1"
+                  >
+                    Lihat Demo
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </a>
+                  <a
+                    v-if="project.githubLink"
+                    :href="project.githubLink"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mt-auto inline-flex items-center justify-center px-4 py-2 bg-gray-700/70 rounded-lg text-white font-medium hover:bg-gray-600 transition-all duration-300 hover:shadow-lg flex-1"
+                  >
+                    <i class="fab fa-github mr-2"></i>
+                    Kode
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -210,15 +234,14 @@ const handleMouseLeave = () => {
 }
 
 .scrollbar-hide {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
 }
 
-/* Snap scrolling */
 .snap-x {
   scroll-snap-type: x mandatory;
 }
@@ -227,13 +250,7 @@ const handleMouseLeave = () => {
   scroll-snap-align: start;
 }
 
-/* Smooth transitions */
 .project-item {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Progress indicator buttons */
-button {
-  transition: all 0.3s ease;
 }
 </style>

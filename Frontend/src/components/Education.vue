@@ -19,7 +19,7 @@ const sortedEducation = computed(() => [...educationHistory.value].sort(sortByDa
 const sortedAchievements = computed(() => [...achievements.value].sort(sortByYearDesc))
 const sortedExperiences = computed(() => [...experiences.value].sort(sortByDateDesc))
 
-onMounted(async () => {
+const fetchProfileData = async () => {
   try {
     const [eduRes, achRes, expRes] = await Promise.all([
       axios.get('http://localhost:3000/api/education'),
@@ -27,21 +27,35 @@ onMounted(async () => {
       axios.get('http://localhost:3000/api/experiences')
     ])
 
-    if (eduRes.data.success) educationHistory.value = eduRes.data.data
-    if (achRes.data.success) achievements.value = achRes.data.data
-    if (expRes.data.success) experiences.value = expRes.data.data
+    if (eduRes.data.success) {
+      educationHistory.value = eduRes.data.data.map(edu => ({
+        ...edu,
+        showDetails: false,
+        additional: edu.additional || '',
+        gpa: edu.gpa || '',
+        logo: edu.logo || ''
+      }))
+    }
     
-    // Initialize showDetails for each education item
-    educationHistory.value = educationHistory.value.map(edu => ({
-      ...edu,
-      showDetails: false
-    }))
+    if (achRes.data.success) {
+      achievements.value = achRes.data.data.map(ach => ({
+        ...ach,
+        category: ach.category || '',
+        link: ach.link || '',
+        skills: ach.skills || []
+      }))
+    }
     
-    // Initialize showResponsibilities for each experience
-    experiences.value = experiences.value.map(exp => ({
-      ...exp,
-      showResponsibilities: false
-    }))
+    if (expRes.data.success) {
+      experiences.value = expRes.data.data.map(exp => ({
+        ...exp,
+        showResponsibilities: false,
+        location: exp.location || '',
+        responsibilities: exp.responsibilities || [],
+        skills: exp.skills || [],
+        companyLogo: exp.company_logo || ''
+      }))
+    }
     
   } catch (err) {
     console.error('Failed to fetch profile data:', err)
@@ -49,6 +63,10 @@ onMounted(async () => {
   } finally {
     isLoading.value = false
   }
+}
+
+onMounted(() => {
+  fetchProfileData()
 })
 
 const setActiveTab = (tab) => {
@@ -58,13 +76,12 @@ const setActiveTab = (tab) => {
 const loadData = () => {
   isLoading.value = true
   error.value = null
-  onMounted()
+  fetchProfileData()
 }
 </script>
 
 <template>
   <section class="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-20">
-    <!-- Enhanced background elements - gradient direction changed to top-left -->
     <div class="absolute inset-0 opacity-30">
       <div class="absolute top-0 left-0 w-full h-full bg-grid-pattern"></div>
       <div class="absolute top-0 left-0 w-full h-full bg-radial-gradient"></div>
@@ -119,22 +136,21 @@ const loadData = () => {
         <i class="fas fa-exclamation-triangle text-red-400 text-3xl mb-4"></i>
         <p class="text-red-300">{{ error }}</p>
         <button 
-          @click="loadData()" 
+          @click="loadData" 
           class="mt-4 px-4 py-2 bg-red-700/50 hover:bg-red-700/70 rounded-lg transition-colors"
         >
-          Retry
+          Coba Lagi
         </button>
       </div>
 
       <!-- Education Panel -->
       <div 
-        v-show="activeTab === 'education'" 
+        v-show="activeTab === 'education' && !isLoading && !error" 
         id="education-panel"
         role="tabpanel"
         aria-labelledby="education-tab"
         class="relative"
       >
-        <!-- Vertical timeline line (centered) -->
         <div class="absolute left-1/2 h-full w-1 bg-gradient-to-b from-blue-500/30 via-cyan-500/50 to-blue-500/30 transform -translate-x-1/2"></div>
         
         <div class="space-y-12">
@@ -143,7 +159,6 @@ const loadData = () => {
             :key="edu.id"
             class="relative flex flex-col md:flex-row items-start group"
           >
-            <!-- Centered Dot -->
             <div class="absolute left-1/2 -translate-x-1/2 z-10 w-8 h-8 flex items-center justify-center">
               <div class="w-full h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300 relative">
                 <div class="w-3 h-3 rounded-full bg-white z-20"></div>
@@ -151,7 +166,6 @@ const loadData = () => {
               </div>
             </div>
             
-            <!-- Education Cards (alternating sides) -->
             <div
               class="w-full md:w-5/12 mt-8 md:mt-0 p-6 bg-gray-800/50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-700/50 backdrop-blur-sm hover:border-cyan-500/30 group-hover:-translate-y-1 text-white"
               :class="{
@@ -172,10 +186,11 @@ const loadData = () => {
                   class="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
                 >
                   <i :class="`fas fa-chevron-${edu.showDetails ? 'up' : 'down'}`"></i>
-                  {{ edu.showDetails ? 'Less details' : 'More details' }}
+                  {{ edu.showDetails ? 'Sembunyikan detail' : 'Lihat detail' }}
                 </button>
                 <div v-if="edu.showDetails" class="mt-2 text-xs text-gray-300">
                   <p>{{ edu.additional }}</p>
+                  <p v-if="edu.gpa" class="mt-1">IPK: {{ edu.gpa }}</p>
                 </div>
               </div>
             </div>
@@ -185,7 +200,7 @@ const loadData = () => {
 
       <!-- Achievements Panel -->
       <div 
-        v-show="activeTab === 'achievements'" 
+        v-show="activeTab === 'achievements' && !isLoading && !error" 
         id="achievements-panel"
         role="tabpanel"
         aria-labelledby="achievements-tab"
@@ -214,6 +229,16 @@ const loadData = () => {
             <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">{{ achievement.title }}</h3>
             <p class="text-gray-300 text-sm mb-3">{{ achievement.description }}</p>
             
+            <div v-if="achievement.skills && achievement.skills.length" class="mb-3 flex flex-wrap gap-2">
+              <span 
+                v-for="skill in achievement.skills" 
+                :key="skill"
+                class="px-2 py-1 text-xs rounded-full bg-gray-700/70 text-blue-400"
+              >
+                {{ skill }}
+              </span>
+            </div>
+            
             <a 
               v-if="achievement.link"
               :href="achievement.link"
@@ -222,21 +247,20 @@ const loadData = () => {
               class="text-xs text-cyan-400 hover:text-cyan-300 inline-flex items-center gap-1"
             >
               <i class="fas fa-external-link-alt"></i>
-              View details
+              Lihat sertifikat
             </a>
           </div>
         </div>
       </div>
 
-      <!-- Experiences Panel - Fixed layout -->
+      <!-- Experiences Panel -->
       <div 
-        v-show="activeTab === 'experiences'" 
+        v-show="activeTab === 'experiences' && !isLoading && !error" 
         id="experiences-panel"
         role="tabpanel"
         aria-labelledby="experiences-tab"
         class="relative"
       >
-        <!-- Vertical timeline line (centered) -->
         <div class="absolute left-1/2 h-full w-1 bg-gradient-to-b from-blue-500/30 via-cyan-500/50 to-blue-500/30 transform -translate-x-1/2"></div>
         
         <div class="space-y-12">
@@ -245,7 +269,6 @@ const loadData = () => {
             :key="experience.id"
             class="relative flex flex-col md:flex-row items-start group"
           >
-            <!-- Centered Dot -->
             <div class="absolute left-1/2 -translate-x-1/2 z-10 w-8 h-8 flex items-center justify-center">
               <div class="w-full h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300 relative">
                 <div class="w-3 h-3 rounded-full bg-white z-20"></div>
@@ -253,7 +276,6 @@ const loadData = () => {
               </div>
             </div>
             
-            <!-- Experience Cards (alternating sides) -->
             <div
               class="w-full md:w-5/12 mt-8 md:mt-0 p-6 bg-gray-800/50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-700/50 backdrop-blur-sm hover:border-cyan-500/30 group-hover:-translate-y-1 text-white"
               :class="{
@@ -291,7 +313,7 @@ const loadData = () => {
                   class="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
                 >
                   <i :class="`fas fa-chevron-${experience.showResponsibilities ? 'up' : 'down'}`"></i>
-                  {{ experience.showResponsibilities ? 'Hide responsibilities' : 'Show responsibilities' }}
+                  {{ experience.showResponsibilities ? 'Sembunyikan tanggung jawab' : 'Tampilkan tanggung jawab' }}
                 </button>
                 <ul v-if="experience.showResponsibilities" class="mt-2 text-xs text-gray-300 space-y-1 pl-4">
                   <li v-for="(resp, i) in experience.responsibilities" :key="i" class="list-disc">
@@ -319,25 +341,6 @@ const loadData = () => {
   background: radial-gradient(circle at 20% 20%, rgba(56,182,255,0.15) 0%, transparent 60%);
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
-}
-
-@keyframes pulse-slow {
-  0%, 100% { opacity: 0.1; }
-  50% { opacity: 0.3; }
-}
-
-.animate-float {
-  animation: float 8s ease-in-out infinite;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 6s ease-in-out infinite;
-}
-
-/* Custom hover transitions */
 .group:hover .group-hover\:-translate-y-1 {
   transform: translateY(-0.25rem);
 }
@@ -346,15 +349,10 @@ const loadData = () => {
   transform: scale(1.1);
 }
 
-.group:hover .group-hover\:scale-125 {
-  transform: scale(1.25);
-}
-
 .group:hover .group-hover\:text-cyan-400 {
   color: #22d3ee;
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -373,12 +371,10 @@ const loadData = () => {
   background: rgba(6,182,212,0.8);
 }
 
-/* Smooth transitions for all interactive elements */
 a, button {
   transition: all 0.3s ease;
 }
 
-/* Consistent card styling */
 .bg-gray-800\/50 {
   background-color: rgba(31, 41, 55, 0.5);
 }
@@ -387,7 +383,6 @@ a, button {
   backdrop-filter: blur(4px);
 }
 
-/* Remove outline and add focus-visible styles */
 button:focus, a:focus {
   outline: none;
 }

@@ -1,3 +1,4 @@
+// data.js
 const educationHistory = [
   {
     id: 1,
@@ -5,6 +6,7 @@ const educationHistory = [
     institution: 'Universitas Amikom Yogyakarta',
     major: 'S1 - Informatika',
     description: 'Fokus pada pengembangan perangkat lunak dan sistem informasi',
+    additional: 'Aktif dalam organisasi mahasiswa dan kegiatan kampus',
     gpa: '4.0',
     logo: '/images/logo_amikom.png'
   },
@@ -14,6 +16,7 @@ const educationHistory = [
     institution: 'SMA Negeri 1 Singaraja',
     major: 'MIPA',
     description: 'Penjurusan Matematika dan Ilmu Pengetahuan Alam',
+    additional: 'Juara 1 Lomba Cerdas Cermat Tingkat Provinsi',
     gpa: '92.5',
     logo: '/images/sma1-logo.png'
   }
@@ -23,20 +26,22 @@ const achievements = [
   {
     id: 1,
     title: 'Juara 1 Hackathon Nasional',
-    year: '2023',
+    year: 2023,
     description: 'Memenangkan kompetisi pengembangan aplikasi dengan solusi inovatif',
+    category: 'Teknologi',
     organizer: 'Kementerian Pendidikan',
-    certificateLink: '/certificates/hackathon-2023.pdf',
-    skillsGained: ['Vue.js', 'Teamwork', 'Problem Solving']
+    link: '/certificates/hackathon-2023.pdf',
+    skills: ['Vue.js', 'Teamwork', 'Problem Solving']
   },
   {
     id: 2,
     title: 'Beasiswa Prestasi',
-    year: '2022',
+    year: 2022,
     description: 'Mendapatkan beasiswa akademik selama 2 semester berturut-turut',
+    category: 'Akademik',
     organizer: 'Universitas Gadjah Mada',
-    certificateLink: '/certificates/beasiswa-2022.pdf',
-    skillsGained: ['Academic Excellence']
+    link: '/certificates/beasiswa-2022.pdf',
+    skills: ['Academic Excellence']
   }
 ];
 
@@ -46,6 +51,7 @@ const experiences = [
     position: 'Frontend Developer Intern',
     company: 'PT. Teknologi Maju',
     period: 'Jun 2023 - Sep 2023',
+    location: 'Yogyakarta, Indonesia',
     description: 'Mengembangkan antarmuka pengguna menggunakan Vue.js dan Tailwind CSS',
     responsibilities: [
       'Membangun komponen UI reusable',
@@ -60,6 +66,7 @@ const experiences = [
     position: 'Asisten Laboratorium Komputer',
     company: 'Universitas Gadjah Mada',
     period: 'Feb 2023 - Sekarang',
+    location: 'Yogyakarta, Indonesia',
     description: 'Membantu praktikum pemrograman dan troubleshooting perangkat',
     responsibilities: [
       'Membimbing mahasiswa dalam praktikum',
@@ -77,7 +84,7 @@ const skills = [
     name: 'Vue.js', 
     level: 'Mahir', 
     icon: '/images/vue.png', 
-    color: 'bg-green-100 text-green-800',
+    color: 'from-emerald-500 to-teal-400',
     description: 'Framework JavaScript untuk membangun antarmuka pengguna',
     category: 'Frontend',
     yearsOfExperience: 2,
@@ -88,7 +95,7 @@ const skills = [
     name: 'JavaScript', 
     level: 'Mahir', 
     icon: '/images/js-icon.png', 
-    color: 'bg-yellow-100 text-yellow-800',
+    color: 'from-yellow-500 to-amber-400',
     description: 'Bahasa pemrograman untuk pengembangan web',
     category: 'Frontend',
     yearsOfExperience: 3,
@@ -99,7 +106,7 @@ const skills = [
     name: 'Node.js', 
     level: 'Menengah', 
     icon: '/images/node-icon.png', 
-    color: 'bg-green-100 text-green-800',
+    color: 'from-green-500 to-emerald-400',
     description: 'Runtime JavaScript untuk pengembangan backend',
     category: 'Backend',
     yearsOfExperience: 1,
@@ -110,7 +117,7 @@ const skills = [
     name: 'PostgreSQL', 
     level: 'Menengah', 
     icon: '/images/postgresql-icon.png', 
-    color: 'bg-blue-100 text-blue-800',
+    color: 'from-indigo-500 to-violet-400',
     description: 'Sistem manajemen basis data relasional',
     category: 'Database',
     yearsOfExperience: 1,
@@ -121,7 +128,7 @@ const skills = [
     name: 'Git', 
     level: 'Mahir', 
     icon: '/images/git-icon.png', 
-    color: 'bg-orange-100 text-orange-800',
+    color: 'from-gray-600 to-gray-500',
     description: 'Sistem kontrol versi untuk kolaborasi pengembangan',
     category: 'Tools',
     yearsOfExperience: 2,
