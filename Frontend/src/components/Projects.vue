@@ -10,23 +10,10 @@ const scrollContainer = ref(null)
 const isLoading = ref(true)
 const error = ref(null)
 
-const fetchProjects = async () => {
+const fetchProjects = async (req, res) => {
   try {
-    const response = await axios.get('https://interactive-cv-brawidya-production.up.railway.app/api/projects')
-    if (response.data.success) {
-      projects.value = response.data.data.map(proj => ({
-        ...proj,
-        image: proj.image || 'https://via.placeholder.com/800x500?text=No+Image',
-        tech: proj.tech || [],
-        link: proj.link || '#',
-        category: proj.category || 'Project',
-        githubLink: proj.github_link || '',
-        features: proj.features || [],
-        screenshots: proj.screenshots || []
-      }))
-    } else {
-      throw new Error('Empty response')
-    }
+    const response = await axios.get('https://interactive-cv-brawidya-production.up.railway.app/api/projects');
+    res.status(200).json(response.data);
   } catch (err) {
     console.error('Error fetching projects:', err)
     projects.value = [

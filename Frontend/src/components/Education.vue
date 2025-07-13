@@ -106,7 +106,7 @@ const fetchData = async () => {
     const response = await axios.get(`https://interactive-cv-brawidya-production.up.railway.app/api/education`)
     return response.data?.success ? response.data.data : fallbackData
   } catch (err) {
-    console.error(`Error fetching $:`, err)
+    console.error(`Error fetching:`, err)
     return fallbackData
   }
 }

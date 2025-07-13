@@ -3,20 +3,27 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import SectionTitle from './SectionTitle.vue'
 
-// Ganti semua ikon menjadi foto kampus
+import VueIcon from '@/assets/vue.png'
+import JavascriptIcon from '@/assets/javascript.jpeg'
+import TailwindIcon from '@/assets/tailiwind.png'
+import NodeIcon from '@/assets/node.png'
+import ExpressIcon from '@/assets/expressjs.png'
+import PostgresIcon from '@/assets/postgresql.png'
+import GithubIcon from '@/assets/github.jpeg'
+import HtmlCssIcon from '@/assets/html-css.png'
 import FotoKampus from '@/assets/foto-kampus.jpg'
 
 const skills = ref([])
 
 const staticSkills = [
-  { name: 'Vue.js', level: 'Mahir', icon: FotoKampus, color: 'from-emerald-500 to-teal-400' },
-  { name: 'JavaScript', level: 'Mahir', icon: FotoKampus, color: 'from-yellow-500 to-amber-400' },
-  { name: 'Tailwind CSS', level: 'Mahir', icon: FotoKampus, color: 'from-blue-500 to-cyan-400' },
-  { name: 'Node.js', level: 'Menengah', icon: FotoKampus, color: 'from-green-500 to-emerald-400' },
-  { name: 'Express.js', level: 'Menengah', icon: FotoKampus, color: 'from-gray-500 to-gray-400' },
-  { name: 'PostgreSQL', level: 'Menengah', icon: FotoKampus, color: 'from-indigo-500 to-violet-400' },
-  { name: 'Git & GitHub', level: 'Mahir', icon: FotoKampus, color: 'from-gray-600 to-gray-500' },
-  { name: 'HTML5 & CSS3', level: 'Mahir', icon: FotoKampus, color: 'from-orange-500 to-amber-400' }
+  { name: 'Vue.js', level: 'Mahir', icon: VueIcon, color: 'from-emerald-500 to-teal-400' },
+  { name: 'JavaScript', level: 'Mahir', icon: JavascriptIcon, color: 'from-yellow-500 to-amber-400' },
+  { name: 'Tailwind CSS', level: 'Mahir', icon: TailwindIcon, color: 'from-blue-500 to-cyan-400' },
+  { name: 'Node.js', level: 'Menengah', icon: NodeIcon, color: 'from-green-500 to-emerald-400' },
+  { name: 'Express.js', level: 'Menengah', icon: ExpressIcon, color: 'from-gray-500 to-gray-400' },
+  { name: 'PostgreSQL', level: 'Menengah', icon: PostgresIcon, color: 'from-indigo-500 to-violet-400' },
+  { name: 'Git & GitHub', level: 'Mahir', icon: GithubIcon, color: 'from-gray-600 to-gray-500' },
+  { name: 'HTML5 & CSS3', level: 'Mahir', icon: HtmlCssIcon, color: 'from-orange-500 to-amber-400' }
 ]
 
 onMounted(async () => {
