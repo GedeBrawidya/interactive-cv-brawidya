@@ -104,10 +104,9 @@ const sortedExperiences = computed(() => [...experiences.value].sort(sortByDateD
 const fetchData = async () => {
   try {
     const response = await axios.get(`https://interactive-cv-brawidya-production.up.railway.app/api/education`)
-    return response.data?.success ? response.data.data : fallbackData
+    return response.data.data 
   } catch (err) {
     console.error(`Error fetching:`, err)
-    return fallbackData
   }
 }
 
@@ -149,9 +148,6 @@ const fetchProfileData = async () => {
   } catch (err) {
     console.error('Failed to fetch profile data:', err)
     error.value = 'Gagal memuat data profil. Menampilkan data contoh...'
-    educationHistory.value = fallbackData.education
-    achievements.value = fallbackData.achievements
-    experiences.value = fallbackData.experiences
   } finally {
     isLoading.value = false
   }
