@@ -1,8 +1,7 @@
-// server.js
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const {
+const { 
   educationHistory,
   achievements,
   experiences,
@@ -13,8 +12,14 @@ const {
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors());
+// Enhanced CORS configuration
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -24,109 +29,74 @@ app.get('/api', (req, res) => {
     message: 'Welcome to my portfolio API',
     version: '1.0.0',
     endpoints: {
-      education: {
-        path: '/api/education',
-        method: 'GET',
-        description: 'Get education history'
-      },
-      achievements: {
-        path: '/api/achievements',
-        method: 'GET',
-        description: 'Get achievements and awards'
-      },
-      experiences: {
-        path: '/api/experiences',
-        method: 'GET',
-        description: 'Get professional experiences'
-      },
-      skills: {
-        path: '/api/skills',
-        method: 'GET',
-        description: 'Get technical skills'
-      },
-      projects: {
-        path: '/api/projects',
-        method: 'GET',
-        description: 'Get portfolio projects'
-      }
+      education: '/api/education',
+      achievements: '/api/achievements',
+      experiences: '/api/experiences',
+      skills: '/api/skills',
+      projects: '/api/projects'
     }
   });
 });
 
-// Education Endpoint
-app.get('/api/education', (req, res) => {
-  try {
-    const data = educationHistory.map(edu => ({
-      ...edu,
-      showDetails: false // Initialize for frontend
-    }));
-    res.json({ success: true, count: data.length, data });
-  } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch education data' });
-  }
-});
-
-// Achievements Endpoint
-app.get('/api/achievements', (req, res) => {
-  try {
-    res.json({ success: true, count: achievements.length, data: achievements });
-  } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch achievements' });
-  }
-});
-
-// Experiences Endpoint
-app.get('/api/experiences', (req, res) => {
-  try {
-    const data = experiences.map(exp => ({
-      ...exp,
-      showResponsibilities: false // Initialize for frontend
-    }));
-    res.json({ success: true, count: data.length, data });
-  } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch experiences' });
-  }
-});
-
-// Skills Endpoint
-app.get('/api/skills', (req, res) => {
-  try {
-    res.json({ success: true, count: skills.length, data: skills });
-  } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch skills' });
-  }
-});
-
-// Projects Endpoint
-app.get('/api/projects', (req, res) => {
-  try {
-    const { category } = req.query;
-    let data = projects;
-    
-    if (category) {
-      data = projects.filter(p => 
-        p.category.toLowerCase() === category.toLowerCase()
-      );
+// Enhanced API Endpoints with better error handling
+const createApiEndpoint = (data, resourceName) => {
+  return (req, res) => {
+    try {
+      const processedData = data.map(item => ({
+        ...item,
+        // Add any necessary transformations here
+      }));
+      
+      res.json({ 
+        success: true, 
+        count: processedData.length, 
+        data: processedData 
+      });
+    } catch (error) {
+      console.error(`Error fetching ${resourceName}:`, error);
+      res.status(500).json({ 
+        success: false, 
+        error: `Failed to fetch ${resourceName}`,
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
     }
-    
-    res.json({ success: true, count: data.length, data });
-  } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch projects' });
-  }
+  };
+};
+
+app.get('/api/education', createApiEndpoint(educationHistory, 'education'));
+app.get('/api/achievements', createApiEndpoint(achievements, 'achievements'));
+app.get('/api/experiences', createApiEndpoint(experiences, 'experiences'));
+app.get('/api/skills', createApiEndpoint(skills, 'skills'));
+app.get('/api/projects', createApiEndpoint(projects, 'projects'));
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK',
+    timestamp: new Date().toISOString()
+  });
 });
 
-// Error Handling
+// Enhanced error handling middleware
 app.use((req, res, next) => {
-  res.status(404).json({ success: false, error: 'Endpoint not found' });
+  res.status(404).json({ 
+    success: false, 
+    error: 'Endpoint not found' 
+  });
 });
 
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ success: false, error: 'Internal server error' });
+  console.error('Server error:', err.stack);
+  res.status(500).json({ 
+    success: false, 
+    error: 'Internal server error',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+  });
 });
 
-// Start server
+// Start server with better logging
 app.listen(PORT, () => {
-  console.log(`✅ Server running at http://localhost:${PORT}`);
-  console.log(`📚 API Docs available at http://localhost:${PORT}/api`);
+  console.log(`\n🚀 Server running at http://localhost:${PORT}`);
+  console.log(`📚 API Docs: http://localhost:${PORT}/api`);
+  console.log(`🩺 Health check: http://localhost:${PORT}/api/health\n`);
 });

@@ -3,12 +3,54 @@ import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import SectionTitle from '@/components/SectionTitle.vue'
 
+// Reactive state
 const educationHistory = ref([])
 const achievements = ref([])
 const experiences = ref([])
 const activeTab = ref('education')
 const isLoading = ref(true)
 const error = ref(null)
+
+// Fallback data
+const fallbackData = {
+  education: [
+    {
+      id: 1,
+      institution: 'Universitas Contoh',
+      major: 'Teknik Informatika',
+      period: '2020-2024',
+      description: 'Contoh data pendidikan ketika API tidak tersedia',
+      additional: '',
+      gpa: '3.8',
+      logo: ''
+    }
+  ],
+  achievements: [
+    {
+      id: 1,
+      title: 'Prestasi Contoh',
+      year: 2023,
+      description: 'Contoh data prestasi ketika API tidak tersedia',
+      category: 'Akademik',
+      organizer: 'Universitas',
+      link: '',
+      skills: []
+    }
+  ],
+  experiences: [
+    {
+      id: 1,
+      position: 'Developer Contoh',
+      company: 'Perusahaan Teknologi',
+      period: '2022-Sekarang',
+      location: 'Jakarta',
+      description: 'Contoh data pengalaman ketika API tidak tersedia',
+      responsibilities: ['Mengembangkan aplikasi', 'Bekerja dalam tim'],
+      skills: ['Vue.js', 'JavaScript'],
+      company_logo: ''
+    }
+  ]
+}
 
 // Sort functions
 const sortByDateDesc = (a, b) => new Date(b.period.split('-')[1]) - new Date(a.period.split('-')[1])
@@ -19,47 +61,57 @@ const sortedEducation = computed(() => [...educationHistory.value].sort(sortByDa
 const sortedAchievements = computed(() => [...achievements.value].sort(sortByYearDesc))
 const sortedExperiences = computed(() => [...experiences.value].sort(sortByDateDesc))
 
+const fetchData = async (endpoint) => {
+  try {
+    const response = await axios.get(`http://localhost:3000/api/${endpoint}`)
+    return response.data?.success ? response.data.data : fallbackData[endpoint]
+  } catch (err) {
+    console.error(`Error fetching ${endpoint}:`, err)
+    return fallbackData[endpoint]
+  }
+}
+
 const fetchProfileData = async () => {
   try {
-    const [eduRes, achRes, expRes] = await Promise.all([
-      axios.get('http://localhost:3000/api/education'),
-      axios.get('http://localhost:3000/api/achievements'),
-      axios.get('http://localhost:3000/api/experiences')
+    isLoading.value = true
+    error.value = null
+
+    const [eduData, achData, expData] = await Promise.all([
+      fetchData('education'),
+      fetchData('achievements'),
+      fetchData('experiences')
     ])
 
-    if (eduRes.data.success) {
-      educationHistory.value = eduRes.data.data.map(edu => ({
-        ...edu,
-        showDetails: false,
-        additional: edu.additional || '',
-        gpa: edu.gpa || '',
-        logo: edu.logo || ''
-      }))
-    }
-    
-    if (achRes.data.success) {
-      achievements.value = achRes.data.data.map(ach => ({
-        ...ach,
-        category: ach.category || '',
-        link: ach.link || '',
-        skills: ach.skills || []
-      }))
-    }
-    
-    if (expRes.data.success) {
-      experiences.value = expRes.data.data.map(exp => ({
-        ...exp,
-        showResponsibilities: false,
-        location: exp.location || '',
-        responsibilities: exp.responsibilities || [],
-        skills: exp.skills || [],
-        companyLogo: exp.company_logo || ''
-      }))
-    }
-    
+    educationHistory.value = eduData.map(edu => ({
+      ...edu,
+      showDetails: false,
+      additional: edu.additional || '',
+      gpa: edu.gpa || '',
+      logo: edu.logo || ''
+    }))
+
+    achievements.value = achData.map(ach => ({
+      ...ach,
+      category: ach.category || '',
+      link: ach.link || '',
+      skills: ach.skills || []
+    }))
+
+    experiences.value = expData.map(exp => ({
+      ...exp,
+      showResponsibilities: false,
+      location: exp.location || '',
+      responsibilities: exp.responsibilities || [],
+      skills: exp.skills || [],
+      companyLogo: exp.company_logo || ''
+    }))
+
   } catch (err) {
     console.error('Failed to fetch profile data:', err)
-    error.value = 'Failed to load profile data. Please try again later.'
+    error.value = 'Gagal memuat data profil. Menampilkan data contoh...'
+    educationHistory.value = fallbackData.education
+    achievements.value = fallbackData.achievements
+    experiences.value = fallbackData.experiences
   } finally {
     isLoading.value = false
   }
@@ -73,8 +125,7 @@ const setActiveTab = (tab) => {
   activeTab.value = tab
 }
 
-const loadData = () => {
-  isLoading.value = true
+const retryFetch = () => {
   error.value = null
   fetchProfileData()
 }
@@ -127,25 +178,29 @@ const loadData = () => {
       </div>
 
       <!-- Loading State -->
-      <div v-if="isLoading" class="flex justify-center items-center py-20">
+      <div v-if="isLoading" class="flex flex-col justify-center items-center py-20 space-y-4">
         <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500"></div>
+        <p class="text-cyan-400">Memuat data...</p>
       </div>
 
       <!-- Error State -->
       <div v-else-if="error" class="text-center py-12 bg-red-900/20 rounded-lg border border-red-700/50">
-        <i class="fas fa-exclamation-triangle text-red-400 text-3xl mb-4"></i>
-        <p class="text-red-300">{{ error }}</p>
-        <button 
-          @click="loadData" 
-          class="mt-4 px-4 py-2 bg-red-700/50 hover:bg-red-700/70 rounded-lg transition-colors"
-        >
-          Coba Lagi
-        </button>
+        <div class="flex flex-col items-center">
+          <i class="fas fa-exclamation-triangle text-red-400 text-3xl mb-4"></i>
+          <p class="text-red-300 mb-4">{{ error }}</p>
+          <button 
+            @click="retryFetch" 
+            class="px-4 py-2 bg-red-700/50 hover:bg-red-700/70 rounded-lg transition-colors flex items-center gap-2"
+          >
+            <i class="fas fa-sync-alt"></i>
+            Coba Lagi
+          </button>
+        </div>
       </div>
 
       <!-- Education Panel -->
       <div 
-        v-show="activeTab === 'education' && !isLoading && !error" 
+        v-show="activeTab === 'education' && !isLoading" 
         id="education-panel"
         role="tabpanel"
         aria-labelledby="education-tab"
@@ -153,12 +208,13 @@ const loadData = () => {
       >
         <div class="absolute left-1/2 h-full w-1 bg-gradient-to-b from-blue-500/30 via-cyan-500/50 to-blue-500/30 transform -translate-x-1/2"></div>
         
-        <div class="space-y-12">
+        <div v-if="sortedEducation.length > 0" class="space-y-12">
           <div
             v-for="(edu, index) in sortedEducation"
             :key="edu.id"
             class="relative flex flex-col md:flex-row items-start group"
           >
+            <!-- Timeline dot -->
             <div class="absolute left-1/2 -translate-x-1/2 z-10 w-8 h-8 flex items-center justify-center">
               <div class="w-full h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300 relative">
                 <div class="w-3 h-3 rounded-full bg-white z-20"></div>
@@ -166,6 +222,7 @@ const loadData = () => {
               </div>
             </div>
             
+            <!-- Education card -->
             <div
               class="w-full md:w-5/12 mt-8 md:mt-0 p-6 bg-gray-800/50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-700/50 backdrop-blur-sm hover:border-cyan-500/30 group-hover:-translate-y-1 text-white"
               :class="{
@@ -196,66 +253,75 @@ const loadData = () => {
             </div>
           </div>
         </div>
+        <div v-else class="text-center py-12 text-gray-400">
+          <i class="fas fa-graduation-cap text-4xl mb-4"></i>
+          <p>Tidak ada data pendidikan yang tersedia</p>
+        </div>
       </div>
 
       <!-- Achievements Panel -->
       <div 
-        v-show="activeTab === 'achievements' && !isLoading && !error" 
+        v-show="activeTab === 'achievements' && !isLoading" 
         id="achievements-panel"
         role="tabpanel"
         aria-labelledby="achievements-tab"
-        class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
       >
-        <div 
-          v-for="(achievement, index) in sortedAchievements" 
-          :key="achievement.id"
-          class="group relative overflow-hidden bg-gray-800/50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-700/50 backdrop-blur-sm hover:border-cyan-500/30 hover:-translate-y-1"
-        >
-          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
-          <div class="p-6 text-white">
-            <div class="flex items-center mb-4">
-              <div class="w-10 h-10 rounded-full bg-gray-700/70 flex items-center justify-center mr-4 group-hover:bg-cyan-500/20 transition-colors">
-                <i class="fas fa-trophy text-cyan-400"></i>
+        <div v-if="sortedAchievements.length > 0" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div 
+            v-for="(achievement, index) in sortedAchievements" 
+            :key="achievement.id"
+            class="group relative overflow-hidden bg-gray-800/50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-700/50 backdrop-blur-sm hover:border-cyan-500/30 hover:-translate-y-1"
+          >
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+            <div class="p-6 text-white">
+              <div class="flex items-center mb-4">
+                <div class="w-10 h-10 rounded-full bg-gray-700/70 flex items-center justify-center mr-4 group-hover:bg-cyan-500/20 transition-colors">
+                  <i class="fas fa-trophy text-cyan-400"></i>
+                </div>
+                <div>
+                  <span class="text-xs font-semibold text-cyan-400 bg-gray-700/70 px-2 py-1 rounded">
+                    {{ achievement.year }}
+                  </span>
+                  <span v-if="achievement.category" class="ml-2 text-xs font-semibold text-blue-400 bg-blue-900/30 px-2 py-1 rounded">
+                    {{ achievement.category }}
+                  </span>
+                </div>
               </div>
-              <div>
-                <span class="text-xs font-semibold text-cyan-400 bg-gray-700/70 px-2 py-1 rounded">
-                  {{ achievement.year }}
-                </span>
-                <span v-if="achievement.category" class="ml-2 text-xs font-semibold text-blue-400 bg-blue-900/30 px-2 py-1 rounded">
-                  {{ achievement.category }}
+              <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">{{ achievement.title }}</h3>
+              <p class="text-gray-300 text-sm mb-3">{{ achievement.description }}</p>
+              
+              <div v-if="achievement.skills?.length" class="mb-3 flex flex-wrap gap-2">
+                <span 
+                  v-for="skill in achievement.skills" 
+                  :key="skill"
+                  class="px-2 py-1 text-xs rounded-full bg-gray-700/70 text-blue-400"
+                >
+                  {{ skill }}
                 </span>
               </div>
-            </div>
-            <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">{{ achievement.title }}</h3>
-            <p class="text-gray-300 text-sm mb-3">{{ achievement.description }}</p>
-            
-            <div v-if="achievement.skills && achievement.skills.length" class="mb-3 flex flex-wrap gap-2">
-              <span 
-                v-for="skill in achievement.skills" 
-                :key="skill"
-                class="px-2 py-1 text-xs rounded-full bg-gray-700/70 text-blue-400"
+              
+              <a 
+                v-if="achievement.link"
+                :href="achievement.link"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-xs text-cyan-400 hover:text-cyan-300 inline-flex items-center gap-1"
               >
-                {{ skill }}
-              </span>
+                <i class="fas fa-external-link-alt"></i>
+                Lihat sertifikat
+              </a>
             </div>
-            
-            <a 
-              v-if="achievement.link"
-              :href="achievement.link"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-xs text-cyan-400 hover:text-cyan-300 inline-flex items-center gap-1"
-            >
-              <i class="fas fa-external-link-alt"></i>
-              Lihat sertifikat
-            </a>
           </div>
+        </div>
+        <div v-else class="text-center py-12 text-gray-400">
+          <i class="fas fa-trophy text-4xl mb-4"></i>
+          <p>Tidak ada data prestasi yang tersedia</p>
         </div>
       </div>
 
       <!-- Experiences Panel -->
       <div 
-        v-show="activeTab === 'experiences' && !isLoading && !error" 
+        v-show="activeTab === 'experiences' && !isLoading" 
         id="experiences-panel"
         role="tabpanel"
         aria-labelledby="experiences-tab"
@@ -263,7 +329,7 @@ const loadData = () => {
       >
         <div class="absolute left-1/2 h-full w-1 bg-gradient-to-b from-blue-500/30 via-cyan-500/50 to-blue-500/30 transform -translate-x-1/2"></div>
         
-        <div class="space-y-12">
+        <div v-if="sortedExperiences.length > 0" class="space-y-12">
           <div
             v-for="(experience, index) in sortedExperiences"
             :key="experience.id"
@@ -297,7 +363,7 @@ const loadData = () => {
               </p>
               <p class="text-sm text-gray-300">{{ experience.description }}</p>
               
-              <div v-if="experience.skills && experience.skills.length" class="mt-3 flex flex-wrap gap-2">
+              <div v-if="experience.skills?.length" class="mt-3 flex flex-wrap gap-2">
                 <span 
                   v-for="skill in experience.skills" 
                   :key="skill"
@@ -307,7 +373,7 @@ const loadData = () => {
                 </span>
               </div>
               
-              <div v-if="experience.responsibilities" class="mt-3">
+              <div v-if="experience.responsibilities?.length" class="mt-3">
                 <button 
                   @click="experience.showResponsibilities = !experience.showResponsibilities"
                   class="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
@@ -323,6 +389,10 @@ const loadData = () => {
               </div>
             </div>
           </div>
+        </div>
+        <div v-else class="text-center py-12 text-gray-400">
+          <i class="fas fa-briefcase text-4xl mb-4"></i>
+          <p>Tidak ada data pengalaman yang tersedia</p>
         </div>
       </div>
     </div>
