@@ -13,28 +13,10 @@ const error = ref(null)
 const fetchProjects = async (req, res) => {
   try {
     const response = await axios.get('https://interactive-cv-brawidya-production.up.railway.app/api/projects');
-    res.status(200).json(response.data);
+    res.status(200).json(response.data.data);
   } catch (err) {
     console.error('Error fetching projects:', err)
-    projects.value = [
-      {
-        title: 'Website Toko Online (Fallback)',
-        image: 'https://via.placeholder.com/800x500?text=Proyek+1',
-        description: 'Platform e-commerce dengan fitur keranjang belanja dan pembayaran online.',
-        tech: ['Vue.js', 'Express.js', 'PostgreSQL'],
-        link: '#',
-        category: 'E-Commerce'
-      },
-      {
-        title: 'Aplikasi Manajemen Tugas',
-        image: 'https://via.placeholder.com/800x500?text=Proyek+2',
-        description: 'Aplikasi untuk melacak progres tugas harian dengan fitur kolaborasi tim.',
-        tech: ['React', 'Firebase', 'Tailwind CSS'],
-        link: '#',
-        category: 'Productivity'
-      }
-    ]
-    error.value = 'Failed to load projects. Showing fallback data.'
+    error.value = 'Failed to load projects'
   } finally {
     isLoading.value = false
   }
