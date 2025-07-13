@@ -83,7 +83,7 @@ const skills = [
     id: 1,
     name: 'Vue.js', 
     level: 'Mahir', 
-    icon: '/images/vue.png', 
+    icon: '/images/vue.png',
     color: 'from-emerald-500 to-teal-400',
     description: 'Framework JavaScript untuk membangun antarmuka pengguna',
     category: 'Frontend',
@@ -94,48 +94,81 @@ const skills = [
     id: 2,
     name: 'JavaScript', 
     level: 'Mahir', 
-    icon: '/images/js-icon.png', 
+    icon: '/images/javascript.jpeg',
     color: 'from-yellow-500 to-amber-400',
-    description: 'Bahasa pemrograman untuk pengembangan web',
+    description: 'Bahasa pemrograman utama dalam pengembangan web modern',
     category: 'Frontend',
     yearsOfExperience: 3,
     projectsUsed: 10
   },
   { 
     id: 3,
+    name: 'Tailwind CSS', 
+    level: 'Mahir', 
+    icon: '/images/tailwind.png',
+    color: 'from-blue-500 to-cyan-400',
+    description: 'Framework CSS utility-first untuk desain UI yang cepat dan responsif',
+    category: 'Styling',
+    yearsOfExperience: 2,
+    projectsUsed: 6
+  },
+  { 
+    id: 4,
     name: 'Node.js', 
     level: 'Menengah', 
-    icon: '/images/node-icon.png', 
+    icon: '/images/node.png',
     color: 'from-green-500 to-emerald-400',
-    description: 'Runtime JavaScript untuk pengembangan backend',
+    description: 'JavaScript runtime untuk pengembangan aplikasi server-side',
     category: 'Backend',
     yearsOfExperience: 1,
     projectsUsed: 3
   },
   { 
-    id: 4,
+    id: 5,
+    name: 'Express.js', 
+    level: 'Menengah', 
+    icon: '/images/expressjs.png',
+    color: 'from-gray-500 to-gray-400',
+    description: 'Framework minimalis untuk membuat REST API di Node.js',
+    category: 'Backend',
+    yearsOfExperience: 1,
+    projectsUsed: 3
+  },
+  { 
+    id: 6,
     name: 'PostgreSQL', 
     level: 'Menengah', 
-    icon: '/images/postgresql-icon.png', 
+    icon: '/images/postgresql.png',
     color: 'from-indigo-500 to-violet-400',
-    description: 'Sistem manajemen basis data relasional',
+    description: 'Sistem basis data relasional open-source yang kuat dan andal',
     category: 'Database',
     yearsOfExperience: 1,
     projectsUsed: 2
   },
   { 
-    id: 5,
+    id: 7,
     name: 'Git', 
     level: 'Mahir', 
-    icon: '/images/git-icon.png', 
+    icon: '/images/github.jpeg',
     color: 'from-gray-600 to-gray-500',
-    description: 'Sistem kontrol versi untuk kolaborasi pengembangan',
+    description: 'Version control system untuk kolaborasi dan manajemen kode',
     category: 'Tools',
     yearsOfExperience: 2,
     projectsUsed: 8
+  },
+  { 
+    id: 8,
+    name: 'HTML5 & CSS3', 
+    level: 'Mahir', 
+    icon: '/images/html-css.png',
+    color: 'from-orange-500 to-amber-400',
+    description: 'Dasar pengembangan web untuk struktur dan tampilan halaman',
+    category: 'Frontend',
+    yearsOfExperience: 4,
+    projectsUsed: 12
   }
 ];
-
+  
 const projects = [
   {
     id: 1,
