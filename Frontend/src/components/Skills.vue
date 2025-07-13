@@ -28,9 +28,9 @@ const staticSkills = [
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:3000/api/skills')
-    if (response.data.length === 0) throw new Error('Empty response')
-    skills.value = response.data.map(item => {
+    const response = await axios.get('https://interactive-cv-brawidya-production.up.railway.app/api/skills')
+    if (response.data.data.length === 0) throw new Error('Empty response')
+    skills.value = response.data.data.map(item => {
       const matched = staticSkills.find(s => s.name === item.name)
       return {
         ...item,

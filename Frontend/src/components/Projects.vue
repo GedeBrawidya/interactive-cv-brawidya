@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import axios from 'axios'
+import axios from 'axios' 
 import SectionTitle from './SectionTitle.vue'
 
 const projects = ref([])
@@ -13,7 +13,7 @@ const error = ref(null)
 const fetchProjects = async (req, res) => {
   try {
     const response = await axios.get('https://interactive-cv-brawidya-production.up.railway.app/api/projects');
-    res.status(200).json(response.data.data);
+    return response.data.data;
   } catch (err) {
     console.error('Error fetching projects:', err)
     error.value = 'Failed to load projects'
