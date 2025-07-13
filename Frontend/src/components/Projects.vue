@@ -12,7 +12,7 @@ const error = ref(null)
 
 const fetchProjects = async () => {
   try {
-    const response = await axios.get('http://localhost:3000/api/projects')
+    const response = await axios.get('https://interactive-cv-brawidya-production.up.railway.app/api/projects')
     if (response.data.success) {
       projects.value = response.data.data.map(proj => ({
         ...proj,

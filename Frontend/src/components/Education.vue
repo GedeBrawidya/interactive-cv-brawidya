@@ -12,85 +12,85 @@ const isLoading = ref(true)
 const error = ref(null)
 
 // Fallback data
-const fallbackData = {
-  education: [
-    {
-     id: 1,
-    period: '2023 - Sekarang',
-    institution: 'Universitas Amikom Yogyakarta',
-    major: 'S1 - Informatika',
-    description: 'Fokus pada pengembangan perangkat lunak dan sistem informasi',
-    additional: 'falback',
-    gpa: '4.0',
-    logo: '/images/logo_amikom.png'
-    },
-  {
-    id: 2,
-    period: '2019 - 2022',
-    institution: 'SMA Negeri 1 Singaraja',
-    major: 'MIPA',
-    description: 'Penjurusan Matematika dan Ilmu Pengetahuan Alam',
-    additional: 'falback',
-    gpa: '92.5',
-    logo: '/images/sma1-logo.png'
-  }
-],
+// const fallbackData = {
+//   education: [
+//     {
+//      id: 1,
+//     period: '2023 - Sekarang',
+//     institution: 'Universitas Amikom Yogyakarta',
+//     major: 'S1 - Informatika',
+//     description: 'Fokus pada pengembangan perangkat lunak dan sistem informasi',
+//     additional: 'falback',
+//     gpa: '4.0',
+//     logo: '/images/logo_amikom.png'
+//     },
+//   {
+//     id: 2,
+//     period: '2019 - 2022',
+//     institution: 'SMA Negeri 1 Singaraja',
+//     major: 'MIPA',
+//     description: 'Penjurusan Matematika dan Ilmu Pengetahuan Alam',
+//     additional: 'falback',
+//     gpa: '92.5',
+//     logo: '/images/sma1-logo.png'
+//   }
+// ],
 
-  achievements: [
-     {
-    id: 1,
-    title: 'Juara 1 Hackathon Nasional',
-    year: 2023,
-    description: 'Memenangkan kompetisi pengembangan aplikasi dengan solusi inovatif',
-    category: 'falback',
-    organizer: 'Kementerian Pendidikan',
-    link: '/certificates/hackathon-2023.pdf',
-    skills: ['Vue.js', 'Teamwork', 'Problem Solving']
-  },
-  {
-    id: 2,
-    title: 'Beasiswa Prestasi',
-    year: 2022,
-    description: 'Mendapatkan beasiswa akademik selama 2 semester berturut-turut',
-    category: 'falback',
-    organizer: 'Universitas Gadjah Mada',
-    link: '/certificates/beasiswa-2022.pdf',
-    skills: ['Academic Excellence']
-  }
-  ],
-  experiences: [
-    {
-    id: 1,
-    position: 'Frontend Developer Intern',
-    company: 'PT. Teknologi Maju',
-    period: 'Jun 2023 - Sep 2023',
-    location: 'Yogyakarta, Indonesia',
-    description: 'Mengembangkan antarmuka pengguna menggunakan Vue.js dan Tailwind CSS',
-    responsibilities: [
-      'Membangun komponen UI reusable',
-      'Optimasi performa aplikasi',
-      'Kolaborasi dengan tim backend'
-    ],
-    skills: ['Vue.js', 'Tailwind CSS', 'JavaScript', 'Git'],
-    companyLogo: '/images/teknologi-maju-logo.png'
-  },
-  {
-    id: 2,
-    position: 'Asisten Laboratorium Komputer',
-    company: 'Universitas Gadjah Mada',
-    period: 'Feb 2023 - Sekarang',
-    location: 'Yogyakarta, Indonesia',
-    description: 'Membantu praktikum pemrograman dan troubleshooting perangkat',
-    responsibilities: [
-      'Membimbing mahasiswa dalam praktikum',
-      'Memelihara perangkat laboratorium',
-      'Membantu penelitian dosen'
-    ],
-    skills: ['Python', 'Java', 'Hardware Maintenance', 'Teaching'],
-    companyLogo: '/images/ugm-logo.png'
-  }
-  ]
-}
+//   achievements: [
+//      {
+//     id: 1,
+//     title: 'Juara 1 Hackathon Nasional',
+//     year: 2023,
+//     description: 'Memenangkan kompetisi pengembangan aplikasi dengan solusi inovatif',
+//     category: 'falback',
+//     organizer: 'Kementerian Pendidikan',
+//     link: '/certificates/hackathon-2023.pdf',
+//     skills: ['Vue.js', 'Teamwork', 'Problem Solving']
+//   },
+//   {
+//     id: 2,
+//     title: 'Beasiswa Prestasi',
+//     year: 2022,
+//     description: 'Mendapatkan beasiswa akademik selama 2 semester berturut-turut',
+//     category: 'falback',
+//     organizer: 'Universitas Gadjah Mada',
+//     link: '/certificates/beasiswa-2022.pdf',
+//     skills: ['Academic Excellence']
+//   }
+//   ],
+//   experiences: [
+//     {
+//     id: 1,
+//     position: 'Frontend Developer Intern',
+//     company: 'PT. Teknologi Maju',
+//     period: 'Jun 2023 - Sep 2023',
+//     location: 'Yogyakarta, Indonesia',
+//     description: 'Mengembangkan antarmuka pengguna menggunakan Vue.js dan Tailwind CSS',
+//     responsibilities: [
+//       'Membangun komponen UI reusable',
+//       'Optimasi performa aplikasi',
+//       'Kolaborasi dengan tim backend'
+//     ],
+//     skills: ['Vue.js', 'Tailwind CSS', 'JavaScript', 'Git'],
+//     companyLogo: '/images/teknologi-maju-logo.png'
+//   },
+//   {
+//     id: 2,
+//     position: 'Asisten Laboratorium Komputer',
+//     company: 'Universitas Gadjah Mada',
+//     period: 'Feb 2023 - Sekarang',
+//     location: 'Yogyakarta, Indonesia',
+//     description: 'Membantu praktikum pemrograman dan troubleshooting perangkat',
+//     responsibilities: [
+//       'Membimbing mahasiswa dalam praktikum',
+//       'Memelihara perangkat laboratorium',
+//       'Membantu penelitian dosen'
+//     ],
+//     skills: ['Python', 'Java', 'Hardware Maintenance', 'Teaching'],
+//     companyLogo: '/images/ugm-logo.png'
+//   }
+//   ]
+// }
 
 // Sort functions
 const sortByDateDesc = (a, b) => new Date(b.period.split('-')[1]) - new Date(a.period.split('-')[1])
@@ -101,13 +101,13 @@ const sortedEducation = computed(() => [...educationHistory.value].sort(sortByDa
 const sortedAchievements = computed(() => [...achievements.value].sort(sortByYearDesc))
 const sortedExperiences = computed(() => [...experiences.value].sort(sortByDateDesc))
 
-const fetchData = async (endpoint) => {
+const fetchData = async () => {
   try {
-    const response = await axios.get(`http://localhost:3000/api/${endpoint}`)
-    return response.data?.success ? response.data.data : fallbackData[endpoint]
+    const response = await axios.get(`https://interactive-cv-brawidya-production.up.railway.app/api/education`)
+    return response.data?.success ? response.data.data : fallbackData
   } catch (err) {
-    console.error(`Error fetching ${endpoint}:`, err)
-    return fallbackData[endpoint]
+    console.error(`Error fetching $:`, err)
+    return fallbackData
   }
 }
 
