@@ -23,7 +23,7 @@ const fetchProjects = async (req, res) => {
 }
 
 onMounted(async () => {
-  await fetchProjects()
+  projects = await fetchProjects()
   startAutoScroll()
 })
 
@@ -56,6 +56,7 @@ const scrollToProject = (index) => {
     })
   }
 }
+
 
 const handleMouseEnter = () => {
   stopAutoScroll()
