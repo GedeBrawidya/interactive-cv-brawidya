@@ -173,12 +173,12 @@ const projects = [
   {
     id: 1,
     title: 'Website Toko Online',
-    image: '/images/project-ecommerce.jpg',
+    image: '/images/Website-toko-online.jpeg',
     description: 'Platform e-commerce dengan fitur keranjang belanja dan pembayaran online',
     detailedDescription: 'Membangun platform e-commerce dari awal dengan fitur lengkap termasuk manajemen produk, keranjang belanja, dan integrasi pembayaran.',
     tech: ['Vue.js', 'Express.js', 'PostgreSQL'],
     link: 'https://contoh-toko-online.com',
-    githubLink: 'https://github.com/username/toko-online',
+    githubLink: 'https://github.com/GedeBrawidya/toko-online',
     category: 'E-Commerce',
     year: 2023,
     features: [
@@ -195,12 +195,12 @@ const projects = [
   {
     id: 2,
     title: 'Aplikasi Manajemen Tugas',
-    image: '/images/project-taskmanager.jpg',
+    image: '/images/website-management-tugas.jpeg',
     description: 'Aplikasi untuk melacak progres tugas harian dengan reminder',
     detailedDescription: 'Aplikasi produktivitas dengan fitur reminder, kolaborasi tim, dan pelacakan progres tugas.',
     tech: ['React', 'Firebase'],
     link: 'https://manajemen-tugas-app.com',
-    githubLink: 'https://github.com/username/task-manager',
+    githubLink: 'https://github.com/GedeBrawidya/task-manager',
     category: 'Productivity',
     year: 2022,
     features: [
@@ -212,6 +212,72 @@ const projects = [
     screenshots: [
       '/images/project2-1.jpg',
       '/images/project2-2.jpg'
+    ]
+  },
+  {
+    id: 3,
+    title: 'Website Portofolio Interaktif',
+    image: '/images/foto-kampus.jpg',
+    description: 'Portofolio pribadi yang menampilkan profil, keterampilan, proyek, dan riwayat pendidikan.',
+    detailedDescription: 'Dibangun sebagai final project mata kuliah Pemrograman Web, menggunakan Vue.js, Express, dan Tailwind CSS dengan animasi scroll dan struktur REST API.',
+    tech: ['Vue.js', 'Express.js', 'Tailwind CSS'],
+    link: 'https://brawidya-portfolio.com',
+    githubLink: 'https://github.com/GedeBrawidya/portfolio',
+    category: 'Personal',
+    year: 2024,
+    features: [
+      'Profil interaktif',
+      'Timeline pengalaman',
+      'Animasi scroll & tab',
+      'Mobile responsive'
+    ],
+    screenshots: [
+      '/images/project3-1.jpg',
+      '/images/project3-2.jpg'
+    ]
+  },
+  {
+    id: 4,
+    title: 'Manajemen Organisasi Karang Taruna',
+    image: '/images/website-karang-taruna.png',
+    description: 'Aplikasi web untuk manajemen struktur organisasi, keuangan, dan kegiatan Karang Taruna.',
+    detailedDescription: 'Proyek pengabdian masyarakat berbasis Next.js dan Express.js dengan database MySQL serta deployment di Azure VPS. Menyediakan fitur autentikasi, struktur organisasi, kas bulanan, dan rapat rutin.',
+    tech: ['Next.js', 'Express.js', 'Tailwind CSS', 'MySQL', 'Azure'],
+    link: 'https://karangtaruna.digital',
+    githubLink: 'https://github.com/GedeBrawidya/karangtaruna',
+    category: 'Community',
+    year: 2025,
+    features: [
+      'Login & Register',
+      'Struktur Organisasi Dinamis',
+      'Manajemen Kas & Rapat',
+      'Integrasi Google Maps & Azure'
+    ],
+    screenshots: [
+      '/images/project4-1.jpg',
+      '/images/project4-2.jpg'
+    ]
+  },
+  {
+    id: 5,
+    title: 'Sistem RACK CLI (C++)',
+    image: '/images/rack.jpg',
+    description: 'Sistem berbasis CLI untuk manajemen RACK sebagai tugas akhir semester 1.',
+    detailedDescription: 'Aplikasi C++ sederhana yang memungkinkan pengguna melakukan input, edit, dan simpan data rak barang melalui antarmuka command-line. Menggunakan file I/O sebagai penyimpanan.',
+    tech: ['C++'],
+    link: '#',
+    githubLink: 'https://github.com/GedeBrawidya/rack-system',
+    category: 'CLI Tools',
+    year: 2023,
+    features: [
+      'Input & Tampilkan data rak',
+      'Simpan ke file',
+      'Navigasi menu CLI',
+      'Validasi input'
+    ],
+    screenshots: [
+      '/images/project5-1.jpg',
+      '/images/project5-2.jpg'
     ]
   }
 ];
