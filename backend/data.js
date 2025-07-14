@@ -178,7 +178,7 @@ const projects = [
     detailedDescription: 'Membangun platform e-commerce dari awal dengan fitur lengkap termasuk manajemen produk, keranjang belanja, dan integrasi pembayaran.',
     tech: ['Vue.js', 'Express.js', 'PostgreSQL'],
     link: 'https://contoh-toko-online.com',
-    githubLink: 'https://github.com/GedeBrawidya/toko-online',
+    githubLink: 'https://github.com/GedeBrawidya',
     category: 'E-Commerce',
     year: 2023,
     features: [
@@ -200,7 +200,7 @@ const projects = [
     detailedDescription: 'Aplikasi produktivitas dengan fitur reminder, kolaborasi tim, dan pelacakan progres tugas.',
     tech: ['React', 'Firebase'],
     link: 'https://manajemen-tugas-app.com',
-    githubLink: 'https://github.com/GedeBrawidya/task-manager',
+    githubLink: 'https://github.com/GedeBrawidya',
     category: 'Productivity',
     year: 2022,
     features: [
@@ -222,7 +222,7 @@ const projects = [
     detailedDescription: 'Dibangun sebagai final project mata kuliah Pemrograman Web, menggunakan Vue.js, Express, dan Tailwind CSS dengan animasi scroll dan struktur REST API.',
     tech: ['Vue.js', 'Express.js', 'Tailwind CSS'],
     link: 'https://brawidya-portfolio.com',
-    githubLink: 'https://github.com/GedeBrawidya/portfolio',
+    githubLink: 'https://github.com/GedeBrawidya',
     category: 'Personal',
     year: 2024,
     features: [
@@ -244,7 +244,7 @@ const projects = [
     detailedDescription: 'Proyek pengabdian masyarakat berbasis Next.js dan Express.js dengan database MySQL serta deployment di Azure VPS. Menyediakan fitur autentikasi, struktur organisasi, kas bulanan, dan rapat rutin.',
     tech: ['Next.js', 'Express.js', 'Tailwind CSS', 'MySQL', 'Azure'],
     link: 'https://karangtaruna.digital',
-    githubLink: 'https://github.com/GedeBrawidya/karangtaruna',
+    githubLink: 'https://github.com/GedeBrawidya',
     category: 'Community',
     year: 2025,
     features: [
@@ -266,7 +266,7 @@ const projects = [
     detailedDescription: 'Aplikasi C++ sederhana yang memungkinkan pengguna melakukan input, edit, dan simpan data rak barang melalui antarmuka command-line. Menggunakan file I/O sebagai penyimpanan.',
     tech: ['C++'],
     link: '#',
-    githubLink: 'https://github.com/GedeBrawidya/rack-system',
+    githubLink: 'https://github.com/GedeBrawidya',
     category: 'CLI Tools',
     year: 2023,
     features: [
