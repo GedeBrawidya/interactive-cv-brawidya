@@ -21,7 +21,7 @@
         </li>
         <li>
           <a 
-            href="#pendidikan" 
+            href="#profil" 
             class="relative text-gray-300 hover:text-white transition-colors duration-300 group"
           >
             <span>Pendidikan</span>
