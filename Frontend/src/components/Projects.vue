@@ -10,28 +10,24 @@ const scrollContainer = ref(null)
 const isLoading = ref(true)
 const error = ref(null)
 
-const fetchProjects = async (req, res) => {
+const fetchProjects = async () => {
   try {
-    const response = await axios.get('https://interactive-cv-brawidya-production.up.railway.app/api/projects');
-    return response.data.data;
+    const response = await axios.get('https://interactive-cv-brawidya-production.up.railway.app/api/projects')
+    projects.value = response.data.data || response.data // Handle both response structures
+    return projects.value
   } catch (err) {
     console.error('Error fetching projects:', err)
-    error.value = 'Failed to load projects'
+    error.value = 'Gagal memuat proyek. Silakan coba lagi nanti.'
+    return []
   } finally {
     isLoading.value = false
   }
 }
 
-onMounted(async () => {
-  projects = await fetchProjects()
-  startAutoScroll()
-})
-
-onUnmounted(() => {
-  stopAutoScroll()
-})
-
 const startAutoScroll = () => {
+  if (projects.value.length <= 1) return // Tidak perlu auto-scroll jika hanya 1 proyek
+  
+  stopAutoScroll() // Pastikan tidak ada interval yang berjalan ganda
   scrollInterval.value = setInterval(() => {
     currentIndex.value = (currentIndex.value + 1) % projects.value.length
     scrollToProject(currentIndex.value)
@@ -46,17 +42,19 @@ const stopAutoScroll = () => {
 }
 
 const scrollToProject = (index) => {
-  if (scrollContainer.value) {
+  if (scrollContainer.value && projects.value.length > 0) {
     const container = scrollContainer.value
-    const projectWidth = container.querySelector('.project-item').offsetWidth
-    const scrollPosition = index * (projectWidth + 32)
-    container.scrollTo({
-      left: scrollPosition,
-      behavior: 'smooth'
-    })
+    const projectItem = container.querySelector('.project-item')
+    if (projectItem) {
+      const projectWidth = projectItem.offsetWidth
+      const scrollPosition = index * (projectWidth + 32) // 32 untuk margin/padding
+      container.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      })
+    }
   }
 }
-
 
 const handleMouseEnter = () => {
   stopAutoScroll()
@@ -65,6 +63,15 @@ const handleMouseEnter = () => {
 const handleMouseLeave = () => {
   startAutoScroll()
 }
+
+onMounted(async () => {
+  await fetchProjects()
+  startAutoScroll()
+})
+
+onUnmounted(() => {
+  stopAutoScroll()
+})
 </script>
 
 <template>
@@ -92,9 +99,15 @@ const handleMouseLeave = () => {
         <p class="text-red-300">{{ error }}</p>
       </div>
 
+      <!-- Empty State -->
+      <div v-else-if="projects.length === 0 && !error" class="text-center py-12 bg-gray-800/20 rounded-lg border border-gray-700/50 mb-8">
+        <i class="fas fa-folder-open text-gray-400 text-3xl mb-4"></i>
+        <p class="text-gray-300">Tidak ada proyek yang ditampilkan</p>
+      </div>
+
       <!-- Horizontal scrolling container -->
       <div 
-        v-if="!isLoading"
+        v-else
         class="relative mt-12"
         @mouseenter="handleMouseEnter"
         @mouseleave="handleMouseLeave"
@@ -105,21 +118,21 @@ const handleMouseLeave = () => {
         >
           <div 
             v-for="(project, index) in projects"
-            :key="index"
+            :key="project.id || index"
             class="flex-shrink-0 w-4/5 sm:w-3/5 md:w-2/5 lg:w-1/3 px-4 transition-transform duration-300 hover:scale-105 project-item snap-start"
           >
             <div class="bg-gray-800/50 rounded-xl shadow-lg overflow-hidden border border-gray-700/50 backdrop-blur-sm hover:border-cyan-500/30 h-full flex flex-col">
               <!-- Project image with gradient overlay -->
               <div class="relative overflow-hidden h-48">
                 <img
-                  :src="project.image"
+                  :src="project.image || '/images/project-placeholder.jpg'"
                   :alt="project.title"
                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent"></div>
                 <div class="absolute bottom-4 left-4">
                   <span class="inline-block px-3 py-1 text-xs font-semibold text-cyan-400 bg-gray-900/70 rounded-full">
-                    {{ project.category }}
+                    {{ project.category || 'Uncategorized' }}
                   </span>
                 </div>
               </div>
@@ -171,7 +184,7 @@ const handleMouseLeave = () => {
         </div>
         
         <!-- Progress indicator -->
-        <div class="flex justify-center mt-6">
+        <div v-if="projects.length > 1" class="flex justify-center mt-6">
           <div class="flex space-x-2">
             <button 
               v-for="(_, index) in projects" 

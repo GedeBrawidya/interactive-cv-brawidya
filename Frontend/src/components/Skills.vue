@@ -39,7 +39,7 @@ onMounted(async () => {
     level: matched?.level || item.level || 'Tidak diketahui'
   }
 })
-
+ 
 
   } catch (error) {
     console.error('Gagal fetch, menggunakan data statis:', error)
